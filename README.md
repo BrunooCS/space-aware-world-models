@@ -27,7 +27,7 @@ Held-out maps embed without per-scene optimization, and scene codes can also be 
 **Observation model** $G_\theta$ (`src/models/generator.py`). The state passes through Fourier features [[3]](#references) to overcome the spectral bias of MLPs on low-dimensional inputs [[4]](#references). It is projected to the scene-code width and fused additively with $z$:
 
 ```math
-\gamma(s) = \big[\sin(2^k \pi c\, s),\ \cos(2^k \pi c\, s)\big]_{k<L}, \qquad f_t = \alpha z + (1-\alpha)\, W\gamma(s_t), \qquad \alpha = \epsilon + (1 - 2\epsilon)\, \sigma(a)
+\gamma(s) = \big[\sin(2^k \pi c\, s),\ \cos(2^k \pi c\, s)\big]_{k \lt L}, \qquad f_t = \alpha z + (1-\alpha)\, W\gamma(s_t), \qquad \alpha = \epsilon + (1 - 2\epsilon)\, \sigma(a)
 ```
 
 $\alpha$ is a single learned scalar, bounded to $[\epsilon, 1-\epsilon]$ so that neither pathway can be switched off. A residual MLP (RMSNorm, SiLU) and a convolutional decoder map $f_t$ to a 96×96 RGB frame. The loss is $\lVert \hat{o}_t - o_t \rVert^2 + \lambda\, \mathrm{LPIPS}(\hat{o}_t, o_t)$ [[5]](#references), with a fresh reparameterized scene code per episode at every epoch. With $z$ fixed and $G_\theta$ deterministic, $s_i = s_j$ implies $\hat{o}_i = \hat{o}_j$: a revisited state receives the same renderer input.
@@ -41,7 +41,7 @@ $\alpha$ is a single learned scalar, bounded to $[\epsilon, 1-\epsilon]$ so that
 Position is integrated additively. Heading is integrated in angle space and mapped back to sine–cosine features, so the renderer input stays continuous:
 
 ```math
-(x, y)_{t+1} = (x, y)_t + (\Delta x_t, \Delta y_t), \qquad \theta_{t+1} = \operatorname{atan2}(\sin\theta_t, \cos\theta_t) + \Delta\theta_t, \qquad s_{t+1} = (x_{t+1}, y_{t+1}, \sin\theta_{t+1}, \cos\theta_{t+1})
+(x, y)_{t+1} = (x, y)_t + (\Delta x_t, \Delta y_t), \qquad \theta_{t+1} = \mathrm{atan2}(\sin\theta_t, \cos\theta_t) + \Delta\theta_t, \qquad s_{t+1} = (x_{t+1}, y_{t+1}, \sin\theta_{t+1}, \cos\theta_{t+1})
 ```
 
 Training uses teacher forcing on the weighted squared error of the standardized increments, in fp32 with TF32 disabled to limit accumulated rollout error:
@@ -99,7 +99,7 @@ a = \min(T_{i-1,j},\, T_{i+1,j}), \quad b = \min(T_{i,j-1},\, T_{i,j+1}), \qquad
 **Control.** The agent at position $\mathbf{p}_t$ with heading $\theta_t$ steers toward the lowest-travel-time cell in a local window:
 
 ```math
-\mathbf{g}^* = \operatorname*{arg\,min}_{\lVert \mathbf{g} - \mathbf{p}_t \rVert_\infty \le R} T(\mathbf{g}), \qquad \delta_t = \operatorname{wrap}\big(\operatorname{atan2}(\mathbf{g}^* - \mathbf{p}_t) - \theta_t\big)
+\mathbf{g}^* = \underset{\lVert \mathbf{g} - \mathbf{p}_t \rVert_\infty \le R}{\arg\min}\; T(\mathbf{g}), \qquad \delta_t = \mathrm{wrap}\big(\mathrm{atan2}(\mathbf{g}^* - \mathbf{p}_t) - \theta_t\big)
 ```
 
 It turns in place when $\lvert\delta_t\rvert$ is large and otherwise moves forward with small heading corrections. A waypoint counts as reached once $T(\mathbf{p}_t)$ falls below a threshold. A stall, detected from the displacement over a window of recent positions, switches to the next waypoint.
