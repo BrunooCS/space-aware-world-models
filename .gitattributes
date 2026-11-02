@@ -1,1 +1,4 @@
 *.ipynb filter=strip-notebook-output
+*.ipynb linguist-documentation
+*.svg linguist-generated
+third_party/** linguist-vendored
