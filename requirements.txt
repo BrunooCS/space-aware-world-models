@@ -1,0 +1,36 @@
+# Python 3.11. Versions are the ones used for the paper experiments.
+# PyTorch was built against CUDA 12.4:
+#   pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu124
+# DeepMind Lab (`deepmind_lab`) is not on PyPI; build its Python wheel from source
+# with third_party/deepmind_lab/build.patch applied.
+
+# ── Core and training ────────────────────────────────
+torch==2.6.0
+torchvision==0.21.0
+lightning==2.6.5
+torchmetrics==1.9.0
+tensorboard==2.21.0
+codecarbon==3.3.0
+pyrallis==0.3.1
+numpy==2.4.4
+pandas==3.0.5
+h5py==3.16.0
+tqdm==4.70.0
+
+# ── Environment, rollouts, and viewers ───────────────
+opencv-python==5.0.0.93
+pillow==12.2.0
+scipy==1.17.1
+scikit-fmm==2024.9.16
+numba==0.68.0
+pygame-ce==2.5.8
+
+# ── Figures and asset rendering ──────────────────────
+matplotlib==3.11.1
+contourpy==1.3.3
+fonttools==4.63.0
+
+# ── Notebooks ────────────────────────────────────────
+jupyterlab==4.6.2
+ipywidgets==8.1.8
+umap-learn==0.5.12

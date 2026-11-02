@@ -1,0 +1,59 @@
+# Python caches and native build outputs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+/build/
+/dist/
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Local environments and settings
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+AGENTS.md
+
+# Generated datasets, checkpoints, and experiment outputs
+/data/
+/datasets/
+/checkpoints/
+/logs/
+/lightning_logs/
+/runs/
+/wandb/
+/outputs/
+/results/
+*.h5
+*.hdf5
+*.ckpt
+*.pt
+*.pth
+*.json
+*.safetensors
+events.out.tfevents.*
+*.log
+
+# External DeepMind Lab checkouts and Bazel outputs
+/lab/
+/deepmind-lab/
+/third_party/lab/
+bazel-*
+
+# Editor and operating-system files
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+assets/swm_speed_dmlab.json
